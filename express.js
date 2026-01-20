@@ -1,32 +1,23 @@
-import express from 'express';
 import fs from "fs/promises"
+import express from "express"
+import authorRouter from "./routes/authourRouter.js";
+import bookRouter from "./routes/bookRouter.js";
+import indexRouter from "./routes/indexRouter.js";
 
 const app = express();
-const PORT = 3000;
 
-//cba changing old but yes this should use public folder instead not root 
-app.use(express.static("."));
+app.use("/authors", authorRouter)
+app.use("/books", bookRouter)
+app.use("/", indexRouter)
 
-app.use(async (req, res) => {
-    let path = req.path === "/" || req.path === "/home" ? "/index" : req.path;
-    try {
-        const content = await fs.readFile(`./views${path}.html`, 'utf8');
-        res.type("text/html").send(content);
-    }
-    catch {
-        res.status(404)
-        try {
-            const content = await fs.readFile(`./views/404.html`, 'utf8');
-            res.send(content);
-        }
-        catch {
-            res.send("404 - Not Found");
-        }
-    }
+app.use((req, res) => {
+    res.status(404).sendFile("404.html", { root: "./views" });
 })
+
+const PORT = 3000;
 
 app.listen(PORT, (error) => {
     if (error) throw error;
 
-    console.log(`Server running at http://localhost:${PORT}/`);
+    console.log(`server running at http://localhost:${PORT}/`)
 })
