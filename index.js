@@ -1,7 +1,6 @@
 import { createServer } from "http";
 import fs from "fs/promises"
 
-
 const hostname = "localhost"
 const port = 8080
 
@@ -37,5 +36,3 @@ server.listen(port, hostname, () => {
 function isCssRequest(path) {
     return path.endsWith(".css");
 }
-
-
